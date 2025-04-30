@@ -41,7 +41,7 @@ app.get("/api", (req, res) => {
 //GET-route to get all work experience data from database
 app.get("/api/workexperience", (req, res) => {
     //get all work experience data
-    connection.query(`SELECT companyName, jobTitle, location, startDate, endDate, description
+    connection.query(`SELECT companyName, jobTitle, location, DATE_FORMAT(startDate, '%Y-%m-%d') AS startDate, DATE_FORMAT(endDate, '%Y-%m-%d') AS endDate, description
         FROM workexperience;`, (err, results) => {
         if (err) {
             res.status(500).json({ error: "Something went wrong: " + err });
@@ -62,6 +62,58 @@ app.get("/api/workexperience", (req, res) => {
 
 //POST-route to add work experience data to the cv database
 app.post("/api/workexperience", (req, res) => {
+    //get data from request body
+    const { companyName, jobTitle, location, startDate, endDate, description } = req.body;
+
+    //error handling
+    let errors = {
+        message: "",
+        detail: "",
+        https_response: {
+
+        }
+    };
+
+    //check if all fields are filled
+    if (!companyName || !jobTitle || !location || !startDate || !endDate || !description) {
+        //error messages
+        errors.message = "Not all fields are filled";
+        errors.detail = "Fill in all fields";
+
+        //response code
+        errors.https_response.message = "Bad request";
+        errors.https_response.status = 400;
+
+        //send error response
+        res.status(400).json({ errors });
+        return;
+    }
+
+    //add work-experience to database
+    connection.query(`INSERT INTO workexperience(companyName, jobTitle, location, startDate, endDate, description) VALUES (?, ?, ?, ?, ?, ?)`,
+        [companyName, jobTitle, location, startDate, endDate, description], (err, results) => {
+            if (err) {
+                //database-errors
+                res.status(500).json({ error: "Something went wrong: " + err });
+                return;
+            }
+
+            //logg inserted data
+            console.log("Fråga skapas: " + results);
+
+            //added object-data
+            let newWorkExperience = {
+                companyName, 
+                jobTitle, 
+                location, 
+                startDate, 
+                endDate, 
+                description
+            };
+
+            //logging new data
+            res.json({ message: "data added", newWorkExperience });
+        });
 });
 
 //PUT-route to update work experience data by id
@@ -71,8 +123,10 @@ app.put("/api/workexperience/:id", (req, res) => {
 
 //DELETE-route to delete work experience data by id
 app.delete("/api/workexperience/:id", (req, res) => {
-        res.json({ message: "data deleted", id });
-    });
+
+    //logg deleted data
+    res.json({ message: `Delete work experience data with id ${req.params.id}` });
+});
 
 //Start server
 app.listen(port, () => {
