@@ -155,7 +155,29 @@ app.put("/api/workexperience/:id", (req, res) => {
 
 //DELETE-route to delete work experience data by id
 app.delete("/api/workexperience/:id", (req, res) => {
-    res.json({ message: "data deleted", id });
+    const id = req.params.id;
+
+    //SQL-query to delete data by id
+    connection.query(`DELETE FROM workexperience WHERE id = ?`, [id], (err, results) => {
+        if (err) {
+            //database-errors
+            res.status(500).json({ error: "Something went wrong: " + err });
+            return;
+        }
+
+        //logg deleted data
+        console.log("Fråga tas bort: " + results);
+
+        //check if any rows were affected
+        if (results.affectedRows === 0) {
+            //if not, send errormessage
+            res.status(404).json({ message: "No work experience found with that id" });
+            return;
+        }
+
+        //logg deleted data
+        res.json({ message: "data deleted", id });
+    });
 });
 
 //Start server
