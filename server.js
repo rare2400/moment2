@@ -41,7 +41,7 @@ app.get("/api", (req, res) => {
 //GET-route to get all work experience data from database
 app.get("/api/workexperience", (req, res) => {
     //get all work experience data
-    connection.query(`SELECT companyName, jobTitle, location, DATE_FORMAT(startDate, '%Y-%m-%d') AS startDate, DATE_FORMAT(endDate, '%Y-%m-%d') AS endDate, description
+    connection.query(`SELECT id, companyName, jobTitle, location, DATE_FORMAT(startDate, '%Y-%m-%d') AS startDate, DATE_FORMAT(endDate, '%Y-%m-%d') AS endDate, description
         FROM workexperience;`, (err, results) => {
         if (err) {
             res.status(500).json({ error: "Something went wrong: " + err });
@@ -103,6 +103,7 @@ app.post("/api/workexperience", (req, res) => {
 
             //added object-data
             let newWorkExperience = {
+                id: results.insertId,
                 companyName, 
                 jobTitle, 
                 location, 
@@ -118,14 +119,43 @@ app.post("/api/workexperience", (req, res) => {
 
 //PUT-route to update work experience data by id
 app.put("/api/workexperience/:id", (req, res) => {
-    res.json({ message: `Update work experience data with id ${req.params.id}` });
+    //get id from URL-parameter
+    const id = req.params.id;
+    const { companyName, jobTitle, location, startDate, endDate, description } = req.body;
+
+    //error handling for all fields
+    if (!companyName || !jobTitle || !location || !startDate || !endDate || !description) {
+        res.status(400).json({ message: "Not all fields are filled" });
+        return;
+    }
+
+    //update the work experience data in the database
+    connection.query(`UPDATE workexperience SET companyName = ?, jobTitle = ?, location = ?, startDate = ?, endDate = ?, description = ? WHERE id = ?`,
+        [companyName, jobTitle, location, startDate, endDate, description, id], (err, results) => {
+            if (err) {
+                //database-errors
+                res.status(500).json({ error: "Something went wrong: " + err });
+                return;
+            }
+
+            //logg updated data
+            console.log("Fråga uppdateras: " + results);
+
+
+            //check if any rows were affected
+            if (results.affectedRows === 0) {
+                //if not, send 404 error
+                res.status(404).json({ message: "No work experience found with that id" });
+                return;
+            }
+
+            res.json({ message: "data updated", id });
+        });
 });
 
 //DELETE-route to delete work experience data by id
 app.delete("/api/workexperience/:id", (req, res) => {
-
-    //logg deleted data
-    res.json({ message: `Delete work experience data with id ${req.params.id}` });
+    res.json({ message: "data deleted", id });
 });
 
 //Start server
