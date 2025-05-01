@@ -117,6 +117,32 @@ app.post("/api/workexperience", (req, res) => {
         });
 });
 
+//GET-route to get work experience data by id
+app.get("/api/workexperience/:id", (req, res) => {
+    //get id from URL-parameter
+    const id = req.params.id;
+
+    //get work experience data by id
+    connection.query(`SELECT id, companyName, jobTitle, location, DATE_FORMAT(startDate, '%Y-%m-%d') AS startDate, DATE_FORMAT(endDate, '%Y-%m-%d') AS endDate, description
+        FROM workexperience WHERE id = ?`, [id], (err, results) => {
+        if (err) {
+            //database-errors
+            res.status(500).json({ error: "Something went wrong: " + err });
+            return;
+        }
+
+        //logg selected data
+        console.log("Fråga hämtas: " + results);
+
+        //check if any rows were affected
+        if (results.length === 0) {
+            //if not, send 404 error
+            res.status(404).json({ message: "No work experience found with that id" });
+            return;
+        }
+    });
+});
+
 //PUT-route to update work experience data by id
 app.put("/api/workexperience/:id", (req, res) => {
     //get id from URL-parameter
