@@ -140,6 +140,9 @@ app.get("/api/workexperience/:id", (req, res) => {
             res.status(404).json({ message: "No work experience found with that id" });
             return;
         }
+
+        //if there is data, send it back
+        res.json({ result: results[0] });
     });
 });
 
