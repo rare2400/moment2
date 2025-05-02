@@ -178,5 +178,6 @@ git clone https://github.com/rare2400/moment22.git
 
 ## Skapad av
 Skapad som en del av en skolupppgift   
+Mittuniversitetet, Webbutvecklingsprogrammet    
 Ramona Reinholdz   
 2025-05-02
