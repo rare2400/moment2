@@ -19,28 +19,28 @@ Webbtjänsten stödjer CRUD-operationer i form av Create, Read, Update och Delet
 - cors
 
 ## Installation
-1. Klona repot:
+1. **Klona repot:**
 ```bash
 git clone https://github.com/rare2400/moment2.git
 cd moment2
 ```
 
-2. Installera paket:
+2. **Installera paket:**
 ```bash
 npm install
 ```
 
-3. Installera nodemon för utveckling:
+3. **Installera nodemon för utveckling:**
 ```bash
 npm install nodemon --save-dev
 ```
 
-4. Skapa eventuell databas och tabell:
+4. **Skapa eventuell databas och tabell:**
 ```bash
 npm run install
 ```
 
-5. Skapa `.env`-fil och fyll i databasuppgifter:
+5. **Skapa `.env`-fil och fyll i databasuppgifter:**
 ```env
 PORT=3000
 DB_HOST=localhost
@@ -49,7 +49,7 @@ DB_PASSWORD=
 DB_DATABASE=cv
 ```
 
-6. starta server:
+6. **Starta server:**
 
 ```bash
 npm run start
