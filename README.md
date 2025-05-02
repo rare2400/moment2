@@ -170,13 +170,13 @@ API:t kan testas med program som:
 - Advanced REST Client
 
 ## Användning i frontend
-API:t kan kopplas till ett simpelt formulär i en frontendapplikation som visar, lägger till, redigerar och tar bort arbetserfarenheter. 
+API:t kan kopplas till ett simpelt formulär i en frontendapplikation som visar, lägger till, redigerar och tar bort arbetserfarenheter.    
 Repo till fronend-applikation: 
 ```bash
 git clone https://github.com/rare2400/moment22.git
 ```
 
 ## Skapad av
-Skapad som en del av en skolupppgift
-Ramona Reinholdz
+Skapad som en del av en skolupppgift   
+Ramona Reinholdz   
 2025-05-02
